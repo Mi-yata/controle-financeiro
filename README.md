@@ -4,6 +4,8 @@ Projeto desenvolvido em aula, utilizando java com Spring Boot.
 
 /////////////////////////////
 
+Dentro do VSCODE --> Extensões Extension Pack for Java +
+Spring Boot Dashboard
 
 Comandos no dos:
 
@@ -47,4 +49,5 @@ Add + Commit + push
 
 /////////////////////////////
 
-Dentro do VSCODE --> Extensões + 
+Criar Pasta controllers dentro do src/main/java/com/{caminho}
+Criar arquivos dentro dessa pasta

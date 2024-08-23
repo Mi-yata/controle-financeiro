@@ -1,22 +1,28 @@
-package com.fatec.exemplo_aula01;
+package com.fatec.controle_financeiro.controllers;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class ExercicioExemplos1 {
+@RequestMapping("/api/exercicios1")
+public class ExercicioController {
+    
+    @GetMapping()
+    public String HelloWorld(){
+        return "Hello";
+    }
     
     @GetMapping("/contar-letras/{texto}")
-    public String contaLetras(){
-        int tamanho = .length();
+    public String contaLetras(@PathVariable String texto){
+        int tamanho = texto.length();
         return String.valueOf(tamanho);
     }
 
     @GetMapping("/idade-com-parametro-tipo-integer/{paramIdade}")
-    public String faixa_etaria(){
-        int idade = ;
+    public String faixa_etaria(@PathVariable Integer paramIdade){
+        int idade = paramIdade;
         if(idade < 0 || idade > 120){
             return "Idade invalida";}
             else{
@@ -34,5 +40,4 @@ public class ExercicioExemplos1 {
                 }
             }
         }
-    }
-
+}
