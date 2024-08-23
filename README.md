@@ -9,6 +9,10 @@ Comandos no dos:
 
 git clone https://github.com/Mi-yata/controle-financeiro.git
 
+git config user.name mi-yata
+
+git config user.email miyata@hotmail.com
+
 git status
 
 git add .
@@ -42,3 +46,5 @@ GENERATE --> Extrair o Download + Recortar os arquivos > Colar e substituir na p
 Add + Commit + push
 
 /////////////////////////////
+
+Dentro do VSCODE --> Extensões + 
