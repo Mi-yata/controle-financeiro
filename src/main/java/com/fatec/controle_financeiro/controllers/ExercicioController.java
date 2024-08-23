@@ -23,12 +23,16 @@ public class ExercicioController {
     @GetMapping("/idade-com-parametro-tipo-integer/{paramIdade}")
     public String faixa_etaria(@PathVariable Integer paramIdade){
         int idade = paramIdade;
+        /*if(idade <0){
+            int idade = paramIdade;
+            throw new NumberFormatException();
+        }*/
         if(idade < 0 || idade > 120){
             return "Idade invalida";}
             else{
                 if (idade < 12) {
                     return "Crianca";
-                    }
+                }
                 else if(idade <= 18){
                     return "Adolescente";
                 }
@@ -39,5 +43,9 @@ public class ExercicioController {
                     return "Idoso";
                 }
             }
+        /*catch (NumberFormatException e){
+            //Se a conversão falhar, significa que a string não é um número válido
+            return "idade invalida";
+        } */
         }
 }
