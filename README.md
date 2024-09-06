@@ -8,12 +8,19 @@ Dentro do VSCODE --> Extensões Extension Pack for Java +
 Spring Boot Dashboard
 
 Comandos no dos:
+-- Clone
+
+cd..
+cd *caminho* -> caminho até a pasta desejada
 
 git clone https://github.com/Mi-yata/controle-financeiro.git
 
-git config user.name mi-yata
+//////////////////////////////
+-- Commit
 
-git config user.email miyata@hotmail.com
+git config --global user.name mi-yata
+
+git config --global user.email miyata@hotmail.com
 
 git status
 
