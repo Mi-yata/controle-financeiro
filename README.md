@@ -30,6 +30,8 @@ git commit -am "resumo da alteração"
 
 git push
 
+login no github
+
 /////////////////////////////
 
 Acessar site start.spring.io
