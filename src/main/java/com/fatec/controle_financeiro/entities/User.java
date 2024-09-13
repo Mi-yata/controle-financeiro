@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class User {
+    private int id;
     
         @NotBlank(message = "O nome não pode estar em branco.")
         private String name;
@@ -17,7 +18,17 @@ public class User {
         public User() {
         }
 
+        public User(int id, String name, int age){
+            this.id = id;
+            this.name = name;
+            this.age = age;
+        }
+
         // Getters e Setters
+        public int getId() { return id; }
+
+        public void setId(int id) { this.id = id; }
+
         public String getName() {
             return name;
         }
@@ -33,4 +44,5 @@ public class User {
         public void setAge(int age) {
             this.age = age;
         }
+
     }
