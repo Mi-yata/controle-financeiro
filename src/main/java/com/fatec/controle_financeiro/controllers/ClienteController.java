@@ -19,6 +19,9 @@ import com.fatec.controle_financeiro.entities.Cliente;
 @RequestMapping("/api/Cliente")
 @RestController
 
+//https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/ResponseEntity.html
+//https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/HttpStatus.html
+
 public class ClienteController {
  
     private List<Cliente> clientes = new ArrayList<>();
@@ -39,7 +42,7 @@ public class ClienteController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Cliente> getById(@PathVariable int id){
+    public ResponseEntity<Cliente> getByIdCliente(@PathVariable int id){
         for(Cliente user : clientes){
             if(user.getId()==id){
                 return new ResponseEntity<>(user, HttpStatus.OK);
