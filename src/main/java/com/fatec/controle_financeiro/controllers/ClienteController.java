@@ -14,36 +14,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fatec.controle_financeiro.entities.User;
+import com.fatec.controle_financeiro.entities.Cliente;
 
+@RequestMapping("/api/Cliente")
 @RestController
-@RequestMapping("/api/user")
-public class UserController {
-    
-    private List<User> usuarios = new ArrayList<>();
+
+public class ClienteController {
+ 
+    private List<Cliente> clientes = new ArrayList<>();
     private int proximoId = 1;
 
-    //CRUD = CREATE, READ, UPDATE E DELETE
-    
-    //CREATE
-    
     @PostMapping()
-    public ResponseEntity<User> createUser(@RequestBody User usuario){
+    public ResponseEntity<Cliente> createCliente(@RequestBody Cliente cliente){
 
-        usuario.setId(proximoId++);
-        usuarios.add(usuario);
+        cliente.setId(proximoId++);
+        clientes.add(cliente);
 
-        return new ResponseEntity<>(usuario, HttpStatus.CREATED);
+        return new ResponseEntity<>(cliente, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUser(){
-        return new ResponseEntity<>(usuarios, HttpStatus.OK);
+    public ResponseEntity<List<Cliente>> getAllCliente(){
+        return new ResponseEntity<>(clientes, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<User> getById(@PathVariable int id){
-        for(User user : usuarios){
+    public ResponseEntity<Cliente> getById(@PathVariable int id){
+        for(Cliente user : clientes){
             if(user.getId()==id){
                 return new ResponseEntity<>(user, HttpStatus.OK);
             }
@@ -52,11 +49,11 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<User> updateUser(@PathVariable int id, @RequestBody User entity){
-        for(User user : usuarios){
+    public ResponseEntity<Cliente> updateCliente(@PathVariable int id, @RequestBody Cliente entity){
+        for(Cliente user : clientes){
             if(user.getId() == id){
-                user.setName(entity.getName());
-                user.setAge(entity.getAge());
+                user.setId(entity.getId());
+                user.setNome(entity.getNome());
                 return new ResponseEntity<>(user, HttpStatus.OK);
             }
         }
@@ -64,14 +61,16 @@ public class UserController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable int id){
-        for(User user : usuarios){
+    public ResponseEntity<Void> deleteCliente(@PathVariable int id){
+        for(Cliente user : clientes){
             if(user.getId() == id){
-                usuarios.remove(user);
+                clientes.remove(user);
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);  
     }
+
+    //CREATE, READ, UPDATE E DELETE
 
 }
