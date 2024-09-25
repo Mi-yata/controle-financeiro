@@ -56,7 +56,7 @@ public class ClienteController {
         for(Cliente user : clientes){
             if(user.getId() == id){
                 user.setId(entity.getId());
-                user.setNome(entity.getNome());
+                user.setName(entity.getName());
                 return new ResponseEntity<>(user, HttpStatus.OK);
             }
         }
