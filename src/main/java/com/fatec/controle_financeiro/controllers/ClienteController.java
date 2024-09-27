@@ -3,6 +3,7 @@ package com.fatec.controle_financeiro.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fatec.controle_financeiro.domain.cliente.ClienteRepository;
 import com.fatec.controle_financeiro.entities.Cliente;
 
 @RequestMapping("/api/Cliente")
@@ -23,6 +25,9 @@ import com.fatec.controle_financeiro.entities.Cliente;
 //https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/HttpStatus.html
 
 public class ClienteController {
+
+    @Autowired
+    private ClienteRepository clienteReposity;
  
     private List<Cliente> clientes = new ArrayList<>();
     private int proximoId = 1;
@@ -30,14 +35,21 @@ public class ClienteController {
     @PostMapping()
     public ResponseEntity<Cliente> createCliente(@RequestBody Cliente cliente){
 
+        /*
         cliente.setId(proximoId++);
         clientes.add(cliente);
+        */
+        
+        //return new ResponseEntity<>(cliente, HttpStatus.CREATED);
 
-        return new ResponseEntity<>(cliente, HttpStatus.CREATED);
+        Cliente clienteCreated = clienteReposity.save(cliente);
+        return new ResponseEntity<>(clienteCreated, HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<Cliente>> getAllCliente(){
+
+        List<Cliente> clientes = clienteReposity.findAll();
         return new ResponseEntity<>(clientes, HttpStatus.OK);
     }
 
