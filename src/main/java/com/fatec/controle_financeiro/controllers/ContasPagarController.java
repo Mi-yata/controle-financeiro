@@ -33,15 +33,25 @@ public class ContasPagarController {
 
     @PostMapping()
     public ResponseEntity<ContasPagar> createContaPagar(@RequestBody ContasPagar contaspagar) {
-        //TODO: process POST request
 
-        if(contaspagar.getVencimento().isAfter(contaspagar.getEmissao()) && (contaspagar.getValor().compareTo(BigDecimal.ZERO) > 0) && contaspagar.getFornecedor() != null){
-            ContasPagar contaspagarCreated = contasPagarRepository.save(contaspagar);
-            return new ResponseEntity<>(contaspagarCreated, HttpStatus.CREATED);
+        if(contaspagar.getVencimento().isAfter(contaspagar.getEmissao())){
+            if((contaspagar.getValor().compareTo(BigDecimal.ZERO) > 0)){
+                if(contaspagar.getFornecedor() != null){
+                    ContasPagar contaspagarCreated = contasPagarRepository.save(contaspagar);
+                    return new ResponseEntity<>(contaspagarCreated, HttpStatus.CREATED);
+                }else{
+                    //Fornecedor nulo
+                    //ResponseEntity.badRequest().body("Fornecedor não encontrado");
+                    return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+                }
+            }else{
+                //Valor menor que 0
+                return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+            }
         }else{
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED) ;
+            //Data emissao inválida
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
-        
     }
     
     @GetMapping()
