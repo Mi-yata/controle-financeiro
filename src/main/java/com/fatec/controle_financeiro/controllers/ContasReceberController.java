@@ -1,9 +1,9 @@
 package com.fatec.controle_financeiro.controllers;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 
 
@@ -29,14 +28,35 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 public class ContasReceberController {
     
+    private String msgErro;
+
     @Autowired
     private ContasReceberRepository contasReceberRepository;
 
     @PostMapping()
-    public ResponseEntity<ContasReceber> createContaReceber(@RequestBody ContasReceber contasreceber) {
+    public ResponseEntity<?> createContaReceber(@RequestBody ContasReceber contasreceber) {
         //TODO: process POST request
-        ContasReceber contasreceberCreated = contasReceberRepository.save(contasreceber);
-        return new ResponseEntity<>(contasreceberCreated, HttpStatus.CREATED);
+        if(contasreceber.getVencimento().isAfter(contasreceber.getEmissao())){
+            if((contasreceber.getValor().compareTo(BigDecimal.ZERO) > 0)){
+                //Verificar por que está caindo null
+                if(contasreceber.getCliente() == null /*|| contaspagar.getCliente() != null*/){
+                    ContasReceber contasreceberCreated = contasReceberRepository.save(contasreceber);
+                    return new ResponseEntity<>(contasreceberCreated, HttpStatus.CREATED);
+                }else{
+                    //Cliente nulo
+                    msgErro = "Cliente não encontrado";
+                    return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+                }
+            }else{
+                //Valor menor que 0
+                msgErro += " Valor da conta não pode ser menor que 0";
+                return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+            }
+        }else{
+            //Data emissao inválida
+            msgErro += " Data de emissão é posterior a de vencimento";
+            return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+        }
     }
     
     @GetMapping()
@@ -56,13 +76,32 @@ public class ContasReceberController {
     }
     
     @PutMapping("{id}")
-    public ResponseEntity<ContasReceber> updateContaReceber(@PathVariable long id, @RequestBody ContasReceber entityContasReceber) {
+    public ResponseEntity<?> updateContaReceber(@PathVariable long id, @RequestBody ContasReceber entityContasReceber) {
         //TODO: process PUT request
         Optional<ContasReceber> contaAtual = contasReceberRepository.findById(id);
         if(contaAtual.isPresent()){
-            entityContasReceber.setId(id);
-            contasReceberRepository.save(entityContasReceber);
-            return new ResponseEntity<>(entityContasReceber, HttpStatus.OK);
+            if(entityContasReceber.getVencimento().isAfter(entityContasReceber.getEmissao())){
+                if((entityContasReceber.getValor().compareTo(BigDecimal.ZERO) > 0)){
+                    //Verificar por que está caindo null
+                    if(entityContasReceber.getCliente() == null /*|| entityContasReceber.getCliente() != null*/){
+                        entityContasReceber.setId(id);    
+                        ContasReceber contasreceberCreated = contasReceberRepository.save(entityContasReceber);
+                        return new ResponseEntity<>(contasreceberCreated, HttpStatus.OK);
+                    }else{
+                        //Cliente nulo
+                        msgErro = "Cliente não encontrado";
+                        return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+                    }
+                }else{
+                    //Valor menor que 0
+                    msgErro += " Valor da conta não pode ser menor que 0";
+                    return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+                }
+            }else{
+                //Data emissao inválida
+                msgErro += " Data de emissão é posterior a de vencimento";
+                return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+            }
         }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
