@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fatec.controle_financeiro.domain.cliente.ClienteRepository;
 import com.fatec.controle_financeiro.domain.contasreceber.ContasReceberRepository;
 import com.fatec.controle_financeiro.entities.ContasReceber;
 
@@ -28,10 +29,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 public class ContasReceberController {
     
-    private String msgErro;
+    private String msgErroCliente = "Cliente não encontrado";
+    private String msgErroValor = "Valor da conta não pode ser menor que 0";
+    private String msgErroData = "Data de emissão é posterior a de vencimento";
 
     @Autowired
     private ContasReceberRepository contasReceberRepository;
+    @Autowired
+    private ClienteRepository clienteRepository;
 
     @PostMapping()
     public ResponseEntity<?> createContaReceber(@RequestBody ContasReceber contasreceber) {
@@ -39,23 +44,20 @@ public class ContasReceberController {
         if(contasreceber.getVencimento().isAfter(contasreceber.getEmissao())){
             if((contasreceber.getValor().compareTo(BigDecimal.ZERO) > 0)){
                 //Verificar por que está caindo null
-                if(contasreceber.getCliente() == null /*|| contaspagar.getCliente() != null*/){
+                if(clienteRepository.findById(contasreceber.getCliente().getId()).isPresent() && contasreceber.getCliente() != null){
                     ContasReceber contasreceberCreated = contasReceberRepository.save(contasreceber);
                     return new ResponseEntity<>(contasreceberCreated, HttpStatus.CREATED);
                 }else{
                     //Cliente nulo
-                    msgErro = "Cliente não encontrado";
-                    return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+                    return new ResponseEntity<>(msgErroCliente, HttpStatus.EXPECTATION_FAILED);
                 }
             }else{
                 //Valor menor que 0
-                msgErro += " Valor da conta não pode ser menor que 0";
-                return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+                return new ResponseEntity<>(msgErroValor, HttpStatus.EXPECTATION_FAILED);
             }
         }else{
             //Data emissao inválida
-            msgErro += " Data de emissão é posterior a de vencimento";
-            return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+            return new ResponseEntity<>(msgErroData, HttpStatus.EXPECTATION_FAILED);
         }
     }
     
@@ -83,24 +85,21 @@ public class ContasReceberController {
             if(entityContasReceber.getVencimento().isAfter(entityContasReceber.getEmissao())){
                 if((entityContasReceber.getValor().compareTo(BigDecimal.ZERO) > 0)){
                     //Verificar por que está caindo null
-                    if(entityContasReceber.getCliente() == null /*|| entityContasReceber.getCliente() != null*/){
+                    if(clienteRepository.findById(entityContasReceber.getCliente().getId()).isPresent() && entityContasReceber.getCliente() != null){
                         entityContasReceber.setId(id);    
                         ContasReceber contasreceberCreated = contasReceberRepository.save(entityContasReceber);
                         return new ResponseEntity<>(contasreceberCreated, HttpStatus.OK);
                     }else{
                         //Cliente nulo
-                        msgErro = "Cliente não encontrado";
-                        return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+                        return new ResponseEntity<>(msgErroCliente, HttpStatus.EXPECTATION_FAILED);
                     }
                 }else{
                     //Valor menor que 0
-                    msgErro += " Valor da conta não pode ser menor que 0";
-                    return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+                    return new ResponseEntity<>(msgErroValor, HttpStatus.EXPECTATION_FAILED);
                 }
             }else{
                 //Data emissao inválida
-                msgErro += " Data de emissão é posterior a de vencimento";
-                return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+                return new ResponseEntity<>(msgErroData, HttpStatus.EXPECTATION_FAILED);
             }
         }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

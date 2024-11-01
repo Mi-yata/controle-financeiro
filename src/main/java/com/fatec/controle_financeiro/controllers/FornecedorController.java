@@ -88,7 +88,7 @@ public class FornecedorController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteCliente(@PathVariable int id){
+    public ResponseEntity<Void> deleteFornecedor(@PathVariable int id){
         /* for(Fornecedor fornecedor : fornecedores){
             if(fornecedor.getId() == id){
                 fornecedores.remove(fornecedor);
