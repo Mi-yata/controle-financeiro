@@ -63,27 +63,6 @@ public class ContasPagarController {
             //Data emissao inválida
             return new ResponseEntity<>(msgErroData, HttpStatus.EXPECTATION_FAILED);
         }
-
-        
-
-        /* if (!contaspagar.getVencimento().isAfter(contaspagar.getEmissao())) {
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
-                                 .body("Data de emissão é posterior a de vencimento");
-        }
-        
-        if (contaspagar.getValor().compareTo(BigDecimal.ZERO) <= 0) {
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
-                                 .body("Valor da conta não pode ser menor ou igual a 0");
-        }
-        
-        if (contaspagar.getFornecedor() == null) {
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
-                                 .body("Fornecedor não encontrado");
-        }
-    
-        ContasPagar contaspagarCreated = contasPagarRepository.save(contaspagar);
-        return new ResponseEntity<>(contaspagarCreated, HttpStatus.CREATED);
-         */
     }
     
     @GetMapping()
@@ -124,14 +103,6 @@ public class ContasPagarController {
                 //Data emissao inválida
                 return new ResponseEntity<>(msgErroData, HttpStatus.EXPECTATION_FAILED);
             }
-
-            /* if(entityContasPagar.getVencimento().isAfter(entityContasPagar.getEmissao()) && (entityContasPagar.getValor().compareTo(BigDecimal.ZERO) > 0) && entityContasPagar.getFornecedor() != null){
-                ContasPagar contaspagarCreated = contasPagarRepository.save(entityContasPagar);
-                entityContasPagar.setId(id);
-                return new ResponseEntity<>(contaspagarCreated, HttpStatus.OK);
-            }else{
-                return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED) ;
-            }   */
             
         }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
