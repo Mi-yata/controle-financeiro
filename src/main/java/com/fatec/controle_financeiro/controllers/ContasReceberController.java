@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 public class ContasReceberController {
     
-    private String msgErroCliente = "Cliente não encontrado";
+    private String msgErroCliente = "Cliente não foi encontrado";
     private String msgErroValor = "Valor da conta não pode ser menor que 0";
     private String msgErroData = "Data de emissão é posterior a de vencimento";
 
