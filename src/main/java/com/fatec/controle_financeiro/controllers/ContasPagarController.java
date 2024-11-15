@@ -34,7 +34,7 @@ public class ContasPagarController {
 
     private String msgErroFornecedor = "Fornecedor não encontrado";
     private String msgErroValor = "Valor da conta não pode ser menor que 0";
-    private String msgErroData = "A data de emissão é posterior a de vencimento";
+    private String msgErroData = "A data de emissão não pode ser posterior a de vencimento!";
 
     @Autowired
     private ContasPagarRepository contasPagarRepository;
