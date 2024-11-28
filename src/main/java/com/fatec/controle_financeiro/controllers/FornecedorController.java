@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fatec.controle_financeiro.domain.fornecedor.FornecedorRepository;
 import com.fatec.controle_financeiro.entities.Fornecedor;
 
-@RequestMapping("/api/Fornecedor")
+@RequestMapping("/api/fornecedor")
 @RestController
 
 public class FornecedorController {
