@@ -26,7 +26,7 @@ public class ContasPagar {
     private LocalDate vencimento;
  
     @ManyToOne
-    @JoinColumn(name = "fornecedor_id")
+    @JoinColumn(name = "fornecedor")
     private Fornecedor fornecedor;
  
     @Column(name = "valor", precision = 12, scale = 2)
@@ -73,4 +73,5 @@ public class ContasPagar {
     public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
+
 }

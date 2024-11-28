@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.controle_financeiro.domain.contaspagar.ContasPagarRepository;
+import com.fatec.controle_financeiro.domain.fornecedor.FornecedorRepository;
 import com.fatec.controle_financeiro.entities.ContasPagar;
+import com.fatec.controle_financeiro.entities.Fornecedor;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,55 +30,39 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 public class ContasPagarController {
 
-    private String msgErro;
+    Fornecedor fornecedor = new Fornecedor();
+
+    private String msgErroFornecedor = "Fornecedor não encontrado";
+    private String msgErroValor = "Valor da conta não pode ser menor que 0";
+    private String msgErroData = "A data de emissão não pode ser posterior a de vencimento!";
 
     @Autowired
     private ContasPagarRepository contasPagarRepository;
+    @Autowired
+    private FornecedorRepository fornecedorRepository;
 
     @PostMapping()
     public ResponseEntity<?> createContaPagar(@RequestBody ContasPagar contaspagar) {
 
         if(contaspagar.getVencimento().isAfter(contaspagar.getEmissao())){
             if((contaspagar.getValor().compareTo(BigDecimal.ZERO) > 0)){
-                //Verificar por que está caindo null
-                if(contaspagar.getFornecedor() == null /*|| contaspagar.getFornecedor() != null*/){
-                    ContasPagar contaspagarCreated = contasPagarRepository.save(contaspagar);
-                    return new ResponseEntity<>(contaspagarCreated, HttpStatus.CREATED);
+                if(fornecedorRepository.findById(contaspagar.getFornecedor().getId()).isPresent() && contaspagar.getFornecedor() != null ) {
+                    //id e buscar no fornecedor se id existe
+                    //nao existe -> mostrar msg
+                        ContasPagar contaspagarCreated = contasPagarRepository.save(contaspagar);
+                        return new ResponseEntity<>(contaspagarCreated, HttpStatus.CREATED);
                 }else{
                     //Fornecedor nulo
-                    msgErro = "Fornecedor não encontrado";
-                    return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+                    return new ResponseEntity<>(msgErroFornecedor, HttpStatus.EXPECTATION_FAILED);
                 }
             }else{
                 //Valor menor que 0
-                msgErro += " Valor da conta não pode ser menor que 0";
-                return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+                return new ResponseEntity<>(msgErroValor, HttpStatus.EXPECTATION_FAILED);
             }
         }else{
             //Data emissao inválida
-            msgErro += " Data de emissão é posterior a de vencimento";
-            return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+            return new ResponseEntity<>(msgErroData, HttpStatus.EXPECTATION_FAILED);
         }
-
-        /* if (!contaspagar.getVencimento().isAfter(contaspagar.getEmissao())) {
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
-                                 .body("Data de emissão é posterior a de vencimento");
-        }
-        
-        if (contaspagar.getValor().compareTo(BigDecimal.ZERO) <= 0) {
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
-                                 .body("Valor da conta não pode ser menor ou igual a 0");
-        }
-        
-        //Verificar por que está caindo null
-        if (contaspagar.getFornecedor() == null) {
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
-                                 .body("Fornecedor não encontrado");
-        }
-    
-        ContasPagar contaspagarCreated = contasPagarRepository.save(contaspagar);
-        return new ResponseEntity<>(contaspagarCreated, HttpStatus.CREATED);
-         */
     }
     
     @GetMapping()
@@ -102,33 +88,21 @@ public class ContasPagarController {
         if(contaAtual.isPresent()){
             if(entityContasPagar.getVencimento().isAfter(entityContasPagar.getEmissao())){
                 if((entityContasPagar.getValor().compareTo(BigDecimal.ZERO) > 0)){
-                    //Verificar por que está caindo null
-                    if(entityContasPagar.getFornecedor() == null /*|| entityContasPagar.getFornecedor() != null*/){
+                    if(fornecedorRepository.findById(entityContasPagar.getFornecedor().getId()).isPresent() && entityContasPagar.getFornecedor() != null ){
                         ContasPagar contaspagarCreated = contasPagarRepository.save(entityContasPagar);
                         return new ResponseEntity<>(contaspagarCreated, HttpStatus.OK);
                     }else{
                         //Fornecedor nulo
-                        msgErro = "Fornecedor não encontrado";
-                        return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+                        return new ResponseEntity<>(msgErroFornecedor, HttpStatus.EXPECTATION_FAILED);
                     }
                 }else{
                     //Valor menor que 0
-                    msgErro += " Valor da conta não pode ser menor que 0";
-                    return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+                    return new ResponseEntity<>(msgErroValor, HttpStatus.EXPECTATION_FAILED);
                 }
             }else{
                 //Data emissao inválida
-                msgErro += " Data de emissão é posterior a de vencimento";
-                return new ResponseEntity<>(msgErro, HttpStatus.EXPECTATION_FAILED);
+                return new ResponseEntity<>(msgErroData, HttpStatus.EXPECTATION_FAILED);
             }
-
-            /* if(entityContasPagar.getVencimento().isAfter(entityContasPagar.getEmissao()) && (entityContasPagar.getValor().compareTo(BigDecimal.ZERO) > 0) && entityContasPagar.getFornecedor() != null){
-                ContasPagar contaspagarCreated = contasPagarRepository.save(entityContasPagar);
-                entityContasPagar.setId(id);
-                return new ResponseEntity<>(contaspagarCreated, HttpStatus.OK);
-            }else{
-                return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED) ;
-            }   */
             
         }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
