@@ -40,23 +40,24 @@ public class ContasReceberController {
 
     @PostMapping()
     public ResponseEntity<?> createContaReceber(@RequestBody ContasReceber contasreceber) {
-        //TODO: process POST request
+
         if(contasreceber.getVencimento().isAfter(contasreceber.getEmissao())){
+            
             if((contasreceber.getValor().compareTo(BigDecimal.ZERO) > 0)){
-                //Verificar por que está caindo null
+
                 if(clienteRepository.findById(contasreceber.getCliente().getId()).isPresent() && contasreceber.getCliente() != null){
                     ContasReceber contasreceberCreated = contasReceberRepository.save(contasreceber);
                     return new ResponseEntity<>(contasreceberCreated, HttpStatus.CREATED);
                 }else{
-                    //Cliente nulo
+
                     return new ResponseEntity<>(msgErroCliente, HttpStatus.EXPECTATION_FAILED);
                 }
             }else{
-                //Valor menor que 0
+
                 return new ResponseEntity<>(msgErroValor, HttpStatus.EXPECTATION_FAILED);
             }
         }else{
-            //Data emissao inválida
+
             return new ResponseEntity<>(msgErroData, HttpStatus.EXPECTATION_FAILED);
         }
     }
@@ -77,35 +78,40 @@ public class ContasReceberController {
         }
     }
     
+    
     @PutMapping("{id}")
     public ResponseEntity<?> updateContaReceber(@PathVariable long id, @RequestBody ContasReceber entityContasReceber) {
-        //TODO: process PUT request
+
         Optional<ContasReceber> contaAtual = contasReceberRepository.findById(id);
         if(contaAtual.isPresent()){
+            
             if(entityContasReceber.getVencimento().isAfter(entityContasReceber.getEmissao())){
+                
                 if((entityContasReceber.getValor().compareTo(BigDecimal.ZERO) > 0)){
-                    //Verificar por que está caindo null
+
                     if(clienteRepository.findById(entityContasReceber.getCliente().getId()).isPresent() && entityContasReceber.getCliente() != null){
                         entityContasReceber.setId(id);    
                         ContasReceber contasreceberCreated = contasReceberRepository.save(entityContasReceber);
                         return new ResponseEntity<>(contasreceberCreated, HttpStatus.OK);
                     }else{
-                        //Cliente nulo
+
                         return new ResponseEntity<>(msgErroCliente, HttpStatus.EXPECTATION_FAILED);
                     }
                 }else{
-                    //Valor menor que 0
+
                     return new ResponseEntity<>(msgErroValor, HttpStatus.EXPECTATION_FAILED);
                 }
             }else{
-                //Data emissao inválida
+
                 return new ResponseEntity<>(msgErroData, HttpStatus.EXPECTATION_FAILED);
             }
         }else{
+            
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
+    
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteContaReceber(@PathVariable long id){
         Optional<ContasReceber> contaAtual = contasReceberRepository.findById(id);
@@ -116,5 +122,4 @@ public class ContasReceberController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 }

@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fatec.controle_financeiro.domain.cliente.ClienteRepository;
 import com.fatec.controle_financeiro.entities.Cliente;
 
-@RequestMapping("/api/Cliente")
+
+@RequestMapping("/api/cliente")
 @RestController
 
 //https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/ResponseEntity.html
@@ -56,12 +57,16 @@ public class ClienteController {
 
     @GetMapping("{id}")
     public ResponseEntity<Cliente> getByIdCliente(@PathVariable int id){
+        
+        
         /*for(Cliente user : clientes){
             if(user.getId()==id){
                 return new ResponseEntity<>(user, HttpStatus.OK);
             }
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);*/
+        
+        
         Optional<Cliente> cliente = clienteRepository.findById(id);
         if (cliente.isPresent()){
             return new ResponseEntity<>(cliente.get(), HttpStatus.OK);
@@ -72,7 +77,8 @@ public class ClienteController {
 
     @PutMapping("{id}")
     public ResponseEntity<Cliente> updateCliente(@PathVariable int id, @RequestBody Cliente entity){
-            /* for(Cliente user : clientes){
+            
+        /* for(Cliente user : clientes){
             if(user.getId() == id){
                 user.setId(entity.getId());
                 user.setName(entity.getName());
@@ -93,6 +99,7 @@ public class ClienteController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteCliente(@PathVariable int id){
+        
         /* for(Cliente user : clientes){
             if(user.getId() == id){
                 clientes.remove(user);
@@ -108,9 +115,5 @@ public class ClienteController {
         } else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
     }
-
-    //CREATE, READ, UPDATE E DELETE
-
 }
